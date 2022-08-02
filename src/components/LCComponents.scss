@@ -1,0 +1,39 @@
+.lc-item {
+  .main {
+    width: 100%;
+    min-height: 25px;
+    padding: 5px 2px;
+    box-sizing: border-box;
+    margin: 10px 0;
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .icon {
+      display: none;
+      width: 20px;
+      height: 20px;
+      margin: 0 5px;
+      cursor: move;
+    }
+
+    :is(.code_area) & {
+      //padding-left: 30px;
+      .icon {
+        display: block;
+      }
+    }
+  }
+
+  .settings {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+}
