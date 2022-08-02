@@ -3,7 +3,7 @@
   <el-container class="container" v-loading="loading">
     <el-main>
       <el-row>
-        <el-col :span="7">
+        <el-col :span="4">
           <el-row justify="end" style="margin: 10px;box-sizing:border-box;">
             <el-upload
                 ref="uploadRef"
@@ -17,10 +17,10 @@
                 <el-button type="primary">select file</el-button>
               </template>
 
-              <el-button class="ml-3" type="success" @click="submitUpload">
-                upload to server
-              </el-button>
+
             </el-upload>
+            <div style="width: 10px"></div>
+
             <el-button type="primary" @click="submit">submit</el-button>
           </el-row>
         </el-col>
@@ -46,7 +46,7 @@
                   <span>Data File</span>
                 </div>
               </template>
-              <draggable
+              <draggable draggable="false"
                   :group="{
                     name: 'lowCode',
                     pull:'clone',
@@ -149,6 +149,8 @@ import draggable from "vuedraggable";
 import {Sort, Delete} from "@element-plus/icons-vue"
 
 // 导入组件
+import LcData from "@/components/LCData";
+import LcNumber from "@/components/LCNumber";
 import Convolution2D from "@/components/Convolution2D";
 import MaxPooling2D from "@/components/MaxPooling2D";
 import Dense from "@/components/Dense";
@@ -171,6 +173,8 @@ export default {
     Sort,
     Delete,
     draggable,
+    LcData,
+    LcNumber,
     BaseParameter,
     Convolution2D,
     MaxPooling2D,
