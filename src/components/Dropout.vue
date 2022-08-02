@@ -3,7 +3,7 @@
   <div @click="methods.handleClick()" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-if="isTemplate">Dropout</div>
   <el-form style="width: 80%; margin: 10px 0 0 20px" v-if="!isTemplate">
     <el-form-item label="rate">
-      <el-input v-model="CData.rate"></el-input>
+      <el-input v-model="CData.rate" placeholder="Float between 0 and 1"></el-input>
     </el-form-item>
   </el-form>
 </div>
@@ -11,7 +11,7 @@
 
 <script>
 import {ComponentItem} from "@/components/ComponentItem";
-import { reactive, ref, onBeforeUnmount} from "vue";
+import { reactive, ref} from "vue";
 
 export default {
   name: "LCDropout",
