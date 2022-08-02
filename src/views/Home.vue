@@ -196,7 +196,7 @@ export default {
           tempData: {
             text: 'Number'
           },
-          data: ['poolSize', 'isActive']
+          data: ['poolSize', 'padding','isActive']
         },
         {
           type: 'Dropout',

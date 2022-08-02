@@ -2,10 +2,14 @@
 <div style="width: 100%"  class="comp-item">
   <div @click="methods.handleClick()" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-if="isTemplate">MaxPooling2D</div>
   <el-form style="margin: 10px 0 0 20px" v-if="!isTemplate">
-    <el-form-item>
-      <el-input-number label="pool size"  v-model="CData.poolSize">
-
-      </el-input-number>
+    <el-form-item label="pool size">
+      <el-input v-model="CData.poolSize" placeholder="Two integer separated by a comma"></el-input>
+    </el-form-item>
+    <el-form-item label="padding">
+      <el-select v-model="CData.padding">
+        <el-option value="valid">valid</el-option>
+        <el-option value="same">same</el-option>
+      </el-select>
     </el-form-item>
   </el-form>
 </div>
@@ -14,7 +18,8 @@
 
 <script>
 import {ComponentItem} from "@/components/ComponentItem";
-import {reactive} from "vue";
+import {onMounted, reactive} from "vue";
+
 
 export default {
   name: "MaxPooling2D",
@@ -42,6 +47,10 @@ export default {
         }
       }
     }
+    onMounted( ()=>{
+          CData.padding = 'valid'
+        }
+    )
     return {
       CData,
       props,

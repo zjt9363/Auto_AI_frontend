@@ -87,7 +87,6 @@ export default {
     onMounted( ()=>{
       CData.padding = 'valid'
         }
-
     )
     return {
       props,
