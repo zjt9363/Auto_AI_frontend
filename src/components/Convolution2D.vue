@@ -45,33 +45,15 @@ export default {
   emits: ['open'],
   setup(props, ctx) {
     const activationList = reactive([
-      {
-        value:"softmax"
-      },
-      {
-        value: "relu"
-      },
-      {
-        value: "elu"
-      },
-      {
-        value: "selu"
-      },
-      {
-        value: "softplus"
-      },
-      {
-        value: "softsign"
-      },
-      {
-        value: "tanh"
-      },
-      {
-        value: "sigmoid"
-      },
-      {
-        value: "linear"
-      }
+      {value: "relu"},
+      {value:"softmax"},
+      {value: "elu"},
+      {value: "selu"},
+      {value: "softplus"},
+      {value: "softsign"},
+      {value: "tanh"},
+      {value: "sigmoid"},
+      {value: "linear"}
     ])
     const CData = reactive(props.data)
     const methods = {

@@ -156,6 +156,7 @@ import Dropout from "@/components/Dropout";
 import BatchNormalization from "@/components/BatchNormalization";
 import GlobalAveragePooling2D from "@/components/GlobalAveragePooling2D";
 import BaseParameter from "@/components/BaseParameter";
+import Flatten from "@/components/Flatten";
 // 导入工具
 import {ComponentItem} from "@/components/ComponentItem";
 // import {getReturnData} from "@/api/getReturnData";
@@ -170,13 +171,14 @@ export default {
     Sort,
     Delete,
     draggable,
+    BaseParameter,
     Convolution2D,
     MaxPooling2D,
     Dropout,
     Dense,
     BatchNormalization,
     GlobalAveragePooling2D,
-    BaseParameter,
+    Flatten,
   },
   data() {
     return {
@@ -221,6 +223,13 @@ export default {
         },
         {
           type: 'GlobalAveragePooling2D',
+          tempData: {
+            text: 'Text'
+          },
+          data: ['value', 'isActive']
+        },
+        {
+          type: 'Flatten',
           tempData: {
             text: 'Text'
           },
