@@ -60,8 +60,7 @@
                   ghostClass="ghost"
               >
                 <template v-slot:item="{ element }">
-                  <component v-if="element.id" :is="element.type" :data="element" :key="element.id"
-                             class="file"/>
+                  <component v-if="element.id" :is="element.type" :data="element" :key="element.id" class="file" @del="delFile"/>
                 </template>
               </draggable>
             </el-card>
@@ -161,7 +160,7 @@ import BaseParameter from "@/components/BaseParameter";
 import Flatten from "@/components/Flatten";
 // 导入工具
 import {ComponentItem} from "@/components/ComponentItem";
-// import {getReturnData} from "@/api/getReturnData";
+import {getReturnData} from "@/api/getReturnData";
 
 
 // 定义初始id
@@ -280,29 +279,36 @@ export default {
     hasProperty(obj, key) {
       return Object.keys(obj).includes(key)
     },
+    delFile(id) {
+      for (let i = 0; i <this.dataFiles.length; i++) {
+        if (this.dataFiles[i].id === id) {
+          this.dataFiles.splice(i, 1)
+        }
+      }
+    },
     submit() {
       this.loading = true
       this.submitList = this.clearAttr([this.baseData, ...this.list, ...this.dataFiles]);
       console.log(this.submitList)
-      // getReturnData(this.submitList).then((res)=>{
-      //   if(res.status === '200' ) {
-      //     this.$message({
-      //       message: "提交成功",
-      //       type: "success"
-      //     })
-      //     this.loading = false
-      //     this.returnData = {
-      //       name: res.name,
-      //       age: res.age
-      //     }
-      //   }else {
-      //     this.$message({
-      //       message: "提交失败",
-      //       type: "warning"
-      //     })
-      //     this.loading = false
-      //   }
-      // })
+      getReturnData(this.submitList).then((res)=>{
+        if(res.status === '200' ) {
+          this.$message({
+            message: "提交成功",
+            type: "success"
+          })
+          this.loading = false
+          this.returnData = {
+            name: res.name,
+            age: res.age
+          }
+        }else {
+          this.$message({
+            message: "提交失败",
+            type: "warning"
+          })
+          this.loading = false
+        }
+      })
 
     },
     submitUpload() {

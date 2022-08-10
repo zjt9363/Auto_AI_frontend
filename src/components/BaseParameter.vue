@@ -5,7 +5,8 @@
   </div>
   <el-form style="width: 80%; margin: 10px 0 0 20px" v-if="!isTemplate">
     <el-form-item label="Number of classification">
-      <el-input v-model="CData.numClasses"></el-input>
+      <el-input v-model="CData.numClasses" placeholder="input an integer"></el-input>
+
     </el-form-item>
     <el-form-item label="To categorical">
 <!--      <el-input v-model="CData.toCategorical"></el-input>-->

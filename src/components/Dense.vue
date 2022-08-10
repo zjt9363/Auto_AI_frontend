@@ -3,7 +3,7 @@
   <div @click="methods.handleClick" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-if="isTemplate">Dense</div>
   <el-form style="width: 80%; margin: 10px 0 0 20px" v-if="!isTemplate">
   <el-form-item label="units">
-    <el-input v-model="CData.units"></el-input>
+    <el-input v-model="CData.units" placeholder="Positive integer"></el-input>
   </el-form-item>
     <el-form-item label="activation">
       <el-select v-model="CData.activation">
