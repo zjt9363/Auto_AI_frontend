@@ -6,12 +6,15 @@ export class ComponentItem {
     constructor(id, type, data) {
         this.id = id++
         this.type = type
-        if (data) for (const key of data) {
-            if (key === 'isActive') {
-                this[key] = false
-            }else {
+        if (Array.isArray(data) && data) {
+            for (const key of data) {
                 this[key] = null
             }
+        }else {
+            for (const key in data) {
+                this.set(key, data[key])
+            }
+
         }
     }
 

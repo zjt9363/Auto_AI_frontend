@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {Loading} from "@element-plus/icons-vue";
 
 
 const service = axios.create({

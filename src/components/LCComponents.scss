@@ -1,4 +1,5 @@
 .lc-item {
+
   .main {
     width: 100%;
     min-height: 25px;
@@ -35,5 +36,13 @@
     z-index: 1000;
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.1);
     padding: 20px;
+  }
+}
+.el-form-item {
+  margin-bottom: 0px;
+}
+.el-collapse {
+  .el-collapse-item {
+    height: 60px;
   }
 }
