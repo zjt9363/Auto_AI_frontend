@@ -6,12 +6,13 @@
           MaxPooling2D
         </template>
         <div>
-          content
+          The main function is to compress the data scale and shorten the training time.
+          In addition, the robustness of the training algorithm can be improved.
         </div>
       </el-collapse-item>
     </el-collapse>
     <div @click="methods.handleClick()" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-else>
-      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{ "(" + CData.id + ")" }}</span>
+<!--      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{ "(" + CData.id + ")" }}</span>-->
       MaxPooling2D
     </div>
     <el-collapse v-if="!isTemplate">
@@ -33,8 +34,10 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            integer or tuple of 2 integers.
+            <br/>
+            Window size over which to take the maximum.
+            `(2, 2)` will take the max value over a 2x2 pooling window.
           </div>
         </el-collapse-item>
         <el-collapse-item name="2">
@@ -50,8 +53,11 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            One of `"valid"` or `"same"` (case-insensitive).
+            <br/>
+            "valid" means no padding. "same" results in padding evenly to
+            the left/right or up/down of the input such that output has the same
+            height/width dimension as the input.
           </div>
         </el-collapse-item>
 

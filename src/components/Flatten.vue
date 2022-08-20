@@ -9,7 +9,10 @@
           Flatten
         </template>
         <div>
-          content
+          Generally, as the last stage of CNN, it is connected after the pooling layer or the convolution layer.
+          The previous layer has completed the task of extracting the features of the sample data in a higher dimension and realized the simplification of the sample data.
+          The full connection layer decomposes two-dimensional data into one-dimensional data.
+          According to the artificial neural network model, the nonlinear combination output is performed to complete the training task.
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -26,7 +29,7 @@
             </el-form-item>
           </template>
           <div>
-            内容
+
           </div>
         </el-collapse-item>
       </el-form>
@@ -41,7 +44,7 @@ import {ComponentItem} from "@/components/ComponentItem";
 import {onMounted} from "vue";
 
 export default {
-  name: "Flatten",
+  name: "LCFlatten",
   props: {
     data: [ComponentItem, Object],
     isTemplate: {

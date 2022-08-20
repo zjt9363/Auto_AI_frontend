@@ -1,7 +1,26 @@
 <template>
   <div style="width: 100%" class="comp-item">
+    <el-collapse v-if="!isTemplate">
+      <el-collapse-item>
+        <template #title>
+          Convolution 2D
+        </template>
+        <div>
+          2D convolution layer (e.g. spatial convolution over images).
+          <br/>
+          This layer creates a convolution kernel that is convolved
+          with the layer input to produce a tensor of
+          outputs.
+          <br/>
+          The purpose of convolution operation is to extract different features of the input.
+          The first convolution layer may only extract some low-level features, such as edges, lines and corners.
+          The network of more layers can iteratively extract more complex features from the low-level features.
+        </div>
+      </el-collapse-item>
+    </el-collapse>
     <div @click="methods.handleClick()" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-if="isTemplate">
-<!--      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{"("+CData.id+")"}}</span>-->
+<!--      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{"("+CData.id+")"}}</span>
+      -->
       Convolution2D
     </div>
     <el-collapse v-if="!isTemplate">
@@ -19,8 +38,11 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            Integer, the dimensionality of the output space (i.e. the number of
+            convolution kernels in the convolution).
+            <br/>
+            Convolution kernels can represent certain characteristics.
+            It performs convolution operation with sample data to obtain samples containing convolution features.
           </div>
         </el-collapse-item>
         <el-collapse-item name="2">
@@ -34,8 +56,8 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            An integer or tuple/list of 2 integers, specifying the height
+            and width of the 2D convolution kernel.
           </div>
         </el-collapse-item>
         <el-collapse-item name="3">
@@ -52,8 +74,9 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            Using the activation function, the input can be nonlinear transformed, enabling it to learn and perform more complex tasks.
+            <br/>
+            Read keras.activations file to get more detail about every kind of activation function.
           </div>
         </el-collapse-item>
         <el-collapse-item name="4">
@@ -70,8 +93,9 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            "valid" means no padding. "same" results in padding with zeros evenly
+            to the left/right or up/down of the input. When `padding="same"` and
+            `strides=1`, the output has the same size as the input.
           </div>
         </el-collapse-item>
 

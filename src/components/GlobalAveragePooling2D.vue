@@ -9,7 +9,11 @@
           GlobalAveragePooling2D
         </template>
         <div>
-          content
+          Replace the traditional fully connected layers in CNN. Advantages:
+          <br/>
+          ① One advantage of global average pooling over the fully connected layers is that it is more native to the convolution structure by enforcing correspondences between feature maps and categories.
+          <br/>
+          ② Another advantage is that there is no parameter to optimize in the global average pooling thus overfitting is avoided at this layer.
         </div>
       </el-collapse-item>
     </el-collapse>

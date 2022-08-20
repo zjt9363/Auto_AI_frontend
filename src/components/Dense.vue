@@ -9,7 +9,14 @@
           Dense
         </template>
         <div>
-          content
+          `Dense` implements the operation:
+          `output = activation(dot(input, kernel) + bias)`
+          where `activation` is the element-wise activation function
+          passed as the `activation` argument, `kernel` is a weights matrix
+          created by the layer, and `bias` is a bias vector created by the layer
+          (only applicable if `use_bias` is `True`). These are all attributes of
+          `Dense`.
+
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -36,8 +43,7 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            Positive integer, dimensionality of the output space.
           </div>
         </el-collapse-item>
 
@@ -59,8 +65,9 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            Using the activation function, the input can be nonlinear transformed, enabling it to learn and perform more complex tasks.
+            <br/>
+            Read keras.activations file to get more detail about every kind of activation function.
           </div>
         </el-collapse-item>
       </el-form>

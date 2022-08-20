@@ -9,7 +9,10 @@
           Dropout
         </template>
         <div>
-          content
+          The Dropout layer randomly sets input units to 0 with a frequency of `rate`
+          at each step during training time, which helps prevent overfitting.
+          Inputs not set to 0 are scaled up by 1/(1 - rate) such that the sum over
+          all inputs is unchanged.
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -36,8 +39,7 @@
             </el-form-item>
           </template>
           <div>
-            Consistent with real life: in line with the process and logic of real
-            life, and comply with languages and habits that the users are used to;
+            Float between 0 and 1. Fraction of the input units to drop.
           </div>
         </el-collapse-item>
       </el-form>

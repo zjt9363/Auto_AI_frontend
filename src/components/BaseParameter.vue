@@ -4,8 +4,8 @@
       <div @click="methods.handleClick" style="cursor: pointer" :style="{color: (CData.isActive ? 'blue' : 'black')}">
         <el-collapse v-if="!isTemplate">
           <el-collapse-item>
-            <template #title style="font-size: 16px">
-              BaseParameter
+            <template #title >
+              <h3>BaseParameter</h3>
             </template>
             <div>
               Consistent with real life: in line with the process and logic of real
@@ -14,8 +14,8 @@
           </el-collapse-item>
         </el-collapse>
         <div v-else>
-        <span style="color: red; font-weight: bold"
-<!--              v-if="CData.id !== undefined && isTemplate">{{ "(" + CData.id + ")" }}</span> -->
+<!--        <span style="color: red; font-weight: bold"
+              v-if="CData.id !== undefined && isTemplate">{{ "(" + CData.id + ")" }}</span> -->
           BaseParameter
         </div>
       </div>

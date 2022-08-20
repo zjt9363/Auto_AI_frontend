@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="24">
           <el-row justify="center" style="margin: 10px;box-sizing:border-box;">
-            <el-col :span="5">
+            <el-col :span="10">
               <el-upload
                   ref="uploadRef"
                   class="upload-demo"
@@ -17,15 +17,14 @@
                   <el-button type="primary">select file</el-button>
                 </template>
                 <template #default>
-                  <el-button class="ml-3" type="success" @click="setUpload" style="margin: 0 10px">
+                  <el-button class="ml-3" type="primary" @click="setUpload" style="margin: 0 0 0 10px">
                     upload to server
                   </el-button>
+                  <el-button type="primary" @click="submit">submit</el-button>
                 </template>
               </el-upload>
             </el-col>
-            <el-col :span="5">
-              <el-button type="primary" @click="submit">submit</el-button>
-            </el-col>
+
             <el-col :span="5"  style="margin-right: 10px">
               <el-alert title="Please upload a file" type="error" center show-icon v-if="!fileIsUpload" :closable="false"/>
               <el-alert type="success" center show-icon v-else-if="fileIsUpload&&this.fileList.length !== 0" :closable="false">
@@ -59,40 +58,6 @@
             </el-row>
           </el-card>
           <div style="height: 10px"/>
-          <!--          <el-row class="file-wrap">-->
-          <!--            <el-card class="data_area">-->
-          <!--              <template #header>-->
-          <!--                <div class="card-header">-->
-          <!--                  <span>Data File</span>-->
-          <!--                </div>-->
-          <!--              </template>-->
-          <!--              <div v-if="!fileIsUpload">-->
-          <!--                文件还未未上传-->
-          <!--              </div>-->
-          <!--              <div v-else>-->
-          <!--                文件上传成功-->
-          <!--              </div>-->
-          <!--&lt;!&ndash;              <draggable&ndash;&gt;-->
-          <!--&lt;!&ndash;                  draggable="false"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  :group="{&ndash;&gt;-->
-          <!--&lt;!&ndash;                    name: 'lowCode',&ndash;&gt;-->
-          <!--&lt;!&ndash;                    pull:'clone',&ndash;&gt;-->
-          <!--&lt;!&ndash;                    put: false&ndash;&gt;-->
-          <!--&lt;!&ndash;                  }"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  :sort="true"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  :animation="300"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  filter=".unmover"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  v-model="fileList"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  item-key="item"&ndash;&gt;-->
-          <!--&lt;!&ndash;                  ghostClass="ghost"&ndash;&gt;-->
-          <!--&lt;!&ndash;              >&ndash;&gt;-->
-          <!--&lt;!&ndash;                <template v-slot:item="{ element }">&ndash;&gt;-->
-          <!--&lt;!&ndash;                  <component v-if="element.id" :is="element.type" :data="element" :key="element.id" class="file"&ndash;&gt;-->
-          <!--&lt;!&ndash;                             @del="delFile"/>&ndash;&gt;-->
-          <!--&lt;!&ndash;                </template>&ndash;&gt;-->
-          <!--&lt;!&ndash;              </draggable>&ndash;&gt;-->
-          <!--            </el-card>-->
-          <!--          </el-row>-->
         </el-col>
 
         <el-col :span="8">
@@ -178,9 +143,11 @@
           <span>Result from Server:</span>
         </div>
       </template>
-      <div style="height: 400px; overflow: auto">
+      <div style="height: 500px; overflow: auto">
         <div v-for="(item,index) in returnData" :key="index">
-          {{ item }}
+          <xmp>
+            {{ item }}
+          </xmp>
         </div>
       </div>
     </el-dialog>
