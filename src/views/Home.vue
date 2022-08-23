@@ -4,8 +4,8 @@
     <el-main>
       <el-row>
         <el-col :span="24">
-          <el-row justify="center" style="margin: 10px;box-sizing:border-box;">
-            <el-col :span="10">
+          <el-row justify="left" style="margin: 10px;box-sizing:border-box;height: 60px">
+            <el-col :span="8">
               <el-upload
                   ref="uploadRef"
                   class="upload-demo"
@@ -17,19 +17,21 @@
                   <el-button type="primary">select file</el-button>
                 </template>
                 <template #default>
-                  <el-button class="ml-3" type="primary" @click="setUpload" style="margin: 0 0 0 10px">
-                    upload to server
+                  <el-button class="ml-3" type="primary" @click="setUpload" style="margin: 0 0 0 10px">upload to
+                    server
                   </el-button>
                   <el-button type="primary" @click="submit">submit</el-button>
                 </template>
               </el-upload>
             </el-col>
 
-            <el-col :span="5"  style="margin-right: 10px">
-              <el-alert title="Please upload a file" type="error" center show-icon v-if="!fileIsUpload" :closable="false"/>
-              <el-alert type="success" center show-icon v-else-if="fileIsUpload&&this.fileList.length !== 0" :closable="false">
+            <el-col :span="7" style="margin-right: 10px">
+              <el-alert title="Please upload your serialized training and test sets.(Use gzip and pkl package)" type="error" center show-icon v-if="!fileIsUpload"
+                        :closable="false"/>
+              <el-alert type="success" center show-icon v-else-if="fileIsUpload&&this.fileList.length !== 0"
+                        :closable="false">
                 <template #title>
-                  {{"["+this.fileList[0].name+"]--Upload Success"}}
+                  {{ "[" + this.fileList[0].name + "]--Upload Success" }}
                 </template>
               </el-alert>
               <el-alert type="success" center show-icon v-else :closable="false">
@@ -38,27 +40,48 @@
                 </template>
               </el-alert>
             </el-col>
-            <el-col :span="5" v-if="fileList.length === 0">
-              <el-switch v-model="fileIsUpload"/>No file should be uploaded
-            </el-col>
           </el-row>
         </el-col>
       </el-row>
+
+
       <el-row :gutter="20">
-        <el-col :span="6">
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>Layer</span>
-              </div>
-            </template>
-            <el-row>
-              <component v-for="(item,index) in componentsList" :is="item.type" :data="item.tempData" :isTemplate="true"
-                         :key="index" @click.capture="tapComponents(item)"/>
-            </el-row>
-          </el-card>
+
+        <el-col :span="5">
+          <el-row>
+            <el-card class="box-card">
+              <template #header>
+                <div class="card-header">
+                  <span>Layer</span>
+                </div>
+              </template>
+              <el-row>
+                <component v-for="(item,index) in componentsList" :is="item.type" :data="item.tempData"
+                           :isTemplate="true"
+                           :key="index" @click.capture="tapComponents(item)"/>
+              </el-row>
+            </el-card>
+          </el-row>
           <div style="height: 10px"/>
+          <el-row style="height: 80px;">
+            <el-col :span="5">
+              <el-tag
+                  v-for="(tag, index) in parameterSetList"
+                  :key="tag.title"
+                  style="margin: 4px 10px;justify-content: space-between"
+                  closable
+                  effect="dark"
+                  type="warning"
+                  size="large"
+                  @click="addParamterSet(tag)"
+                  @close="delParamterSet(tag.title, index)"
+              >
+                {{ tag.title }}
+              </el-tag>
+            </el-col>
+          </el-row>
         </el-col>
+
 
         <el-col :span="8">
           <el-row>
@@ -66,13 +89,20 @@
               <template #header>
                 <div class="card-header">
                   <span>Model:</span>
-                  <el-button type="danger" @click="cleanAllData">
-                    <el-icon size="16px">
-                      <Delete/>
-                    </el-icon>
-                  </el-button>
-                </div>
+                  <div>
+                    <el-button type="primary" @click="saveParam">
+                      <el-icon size="16px">
+                        <UploadFilled/>
+                      </el-icon>
+                    </el-button>
 
+                    <el-button type="danger" @click="cleanAllData">
+                      <el-icon size="16px">
+                        <Delete/>
+                      </el-icon>
+                    </el-button>
+                  </div>
+                </div>
               </template>
               <BaseParameter :data="baseData" :isTemplate="true" @getType="openDiv"></BaseParameter>
               <draggable
@@ -95,7 +125,9 @@
             </el-card>
           </el-row>
         </el-col>
-        <el-col :span="10">
+
+
+        <el-col :span="11">
           <el-card>
             <template #header>
               <div class="card-header">
@@ -113,6 +145,8 @@
         </el-col>
       </el-row>
     </el-main>
+
+
     <div id="bin" :class="{'bin-show':showBin}">
       <el-icon size="32px">
         <Delete/>
@@ -135,7 +169,7 @@
     <el-dialog
         v-model="dialogVisible"
         title="Tips"
-        width="70%"
+        width="55%"
         :before-close="handleClose"
     >
       <template #header>
@@ -149,7 +183,21 @@
             {{ item }}
           </xmp>
         </div>
+        <div v-if="imgLIst.length !== 0">
+          <img :src="item" v-for="item in imgLIst" :key="item" style="width: 30%">
+        </div>
       </div>
+      <template #footer>
+        <el-button type="primary" @click="downloadPyFile">
+          Download Python File
+        </el-button>
+        <el-button type="primary" @click="downloadModelFile">
+          Download Model File
+        </el-button>
+        <el-button type="primary" @click="downloadGraph">
+          Download Graph
+        </el-button>
+      </template>
     </el-dialog>
   </el-container>
 </template>
@@ -157,24 +205,25 @@
 <script>
 // 导入拖拽
 import draggable from "vuedraggable";
-import {Delete} from '@element-plus/icons-vue'
+import {Delete, UploadFilled} from '@element-plus/icons-vue'
 
 // 导入组件
 import LcData from "@/components/LCData";
 import LcNumber from "@/components/LCNumber";
-import Convolution2D from "@/components/Convolution2D";
-import MaxPooling2D from "@/components/MaxPooling2D";
-import Dense from "@/components/Dense";
-import Dropout from "@/components/Dropout";
-import BatchNormalization from "@/components/BatchNormalization";
-import GlobalAveragePooling2D from "@/components/GlobalAveragePooling2D";
-import BaseParameter from "@/components/BaseParameter";
-import Flatten from "@/components/Flatten";
+import Convolution2D from "@/layers/Convolution2D";
+import MaxPooling2D from "@/layers/MaxPooling2D";
+import Dense from "@/layers/Dense";
+import Dropout from "@/layers/Dropout";
+import BatchNormalization from "@/layers/BatchNormalization";
+import GlobalAveragePooling2D from "@/layers/GlobalAveragePooling2D";
+import BaseParameter from "@/layers/BaseParameter";
+import Flatten from "@/layers/Flatten";
 // 导入工具
 import {ComponentItem} from "@/components/ComponentItem";
 import {getReturnData} from "@/api/getReturnData";
 import {uploadFile} from "@/api/uploadFile";
 import {stopReturnData} from "@/api/stopReturnData";
+import {downloadPyFile, downloadImg} from "@/api/fileDownload";
 
 
 // 定义初始id
@@ -184,6 +233,7 @@ export default {
   name: "HomePage",
   components: {
     Delete,
+    UploadFilled,
     draggable,
     LcData,
     LcNumber,
@@ -198,6 +248,7 @@ export default {
   },
   data() {
     return {
+      parameterSetList: [],
       willDelete: false, // 是否删除已选组件
       showBin: false,
       dialogVisible: false,  //  显示隐藏对话框
@@ -289,17 +340,27 @@ export default {
       webSocket: null,
       fileIsUpload: false,  // 判断文件是否上传
       test: false,
-      file: null
+      file: null,
+      imgLIst: []
     };
   },
   created() {
     this.baseData = new ComponentItem(0, 'BaseParameter', {
       numClasses: '',
       toCategorical: '',
+      optimizer: '',
       isActive: '',
       isValid: false
     })
     this.currentComponents = this.baseData
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      this.parameterSetList.push({
+        title: key,
+        value: localStorage.getItem(key)
+      })
+    }
+
   },
   mounted() {
     this.initWebSocket()
@@ -310,16 +371,121 @@ export default {
     },
   },
   methods: {
+    showJpg() {
+      return true
+    },
+    addParamterSet(tag) {
+      const list = JSON.parse(tag.value)
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].isActive === true && list[i].isActive) {
+          this.currentComponents = list[i]
+          this.openDiv(this.currentComponents)
+        }
+      }
+      this.baseData.numClasses = list[0].numClasses
+      this.baseData.isActive = list[0].isActive
+      list.shift()
+      this.list = []
+      this.list = list
+    },
+    delParamterSet(title, index) {
+      this.$messageBox.confirm(
+          'Are you sure to clear the list?',
+          'clean Message',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+          }).then(() => {
+        this.parameterSetList.splice(index, 1)
+        localStorage.removeItem(title)
+      })
+
+    },
+    saveParam() {
+      this.$messageBox.prompt("set a name for parameters", "save parameters", {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        inputPattern: /^[a-zA-Z0-9]{1,20}/,
+        inputErrorMessage: "The length of name should less than 20"
+      })
+          .then(({value}) => {
+            localStorage.setItem(value, JSON.stringify([this.baseData, ...this.list]))
+            this.parameterSetList.push({
+              title: value,
+              value: JSON.stringify([this.baseData, ...this.list]),
+            })
+          })
+    },
+    downloadModelFile() {
+      let path = "C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\model.h5"
+
+      downloadPyFile(path).then(res => {
+        console.log(res);
+        let blob = new Blob([res], {
+          type: "application/vnd.ms-excel"    // 这边的类型需要改
+        });
+        let url = window.URL.createObjectURL(blob)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.download = 'model.h5'  //  这边的名字需要改
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+
+      })
+    },
+    downloadPyFile() {
+
+      let path = "C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\main.py"
+
+      downloadPyFile(path).then(res => {
+        console.log(res);
+        let blob = new Blob([res], {
+          type: "application/vnd.ms-excel"    // 这边的类型需要改
+        });
+        let url = window.URL.createObjectURL(blob)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.download = 'main.py'  //  这边的名字需要改
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+
+      })
+    },
+    downloadGraph() {
+      downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\accuracy.jpg").then(res => {
+        let url = window.URL.createObjectURL(res)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.download = 'a.jpg'  //  这边的名字需要改
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+      })
+      downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\loss.jpg").then(res => {
+        let url = window.URL.createObjectURL(res)
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.download = 'a.jpg'  //  这边的名字需要改
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+      })
+    },
     handleDragEnd() {
       this.showBin = false
-    },
+    }
+    ,
     tapComponents(e) {
       const obj = new ComponentItem(id++, e.type, this.deepClone(e.data) || null)
       this.list.push(obj)
       this.currentComponents = obj
       obj.isActive = true
       this.openDiv(obj)
-    },
+    }
+    ,
     clearAttr(oldArr) {
       let arr = oldArr
       for (let i = 0; i < arr.length; i++) {
@@ -331,10 +497,12 @@ export default {
         }
       }
       return arr
-    },
+    }
+    ,
     hasProperty(obj, key) {
       return Object.keys(obj).includes(key)
-    },
+    }
+    ,
     // delFile(id) {
     //   for (let i = 0; i < this.fileList.length; i++) {
     //     if (this.fileList[i].id === id) {
@@ -370,13 +538,14 @@ export default {
         })
       })
 
-    },
+    }
+    ,
     validSubmit(forList) {
       for (let i = 0; i < forList.length; i++) {
         if (forList[i].isValid === false) {
           this.$notify.warning({
             title: "Submit Invalid",
-            message: "id为" + forList[i].id + "的" + forList[i].type + "未写",
+            message: "id for " + forList[i].id + " in " + forList[i].type + "should be entered",
           })
           this.currentComponents = forList[i]
           this.openDiv(forList[i].type)
@@ -403,14 +572,16 @@ export default {
         }
       }
       return true
-    },
+    }
+    ,
     // 修改提交数据
     submit: function () {
-      let forList = [this.baseData, ...this.list]
-      let isSubmit = this.validSubmit(forList)
-      if (!isSubmit) {
-        return
-      }
+      /* let forList = [this.baseData, ...this.list]
+       let isSubmit = this.validSubmit(forList)
+       if (!isSubmit) {
+         return
+       }*/
+
       if (!this.fileIsUpload) {
         this.$notify.warning({
           title: "file err",
@@ -429,12 +600,13 @@ export default {
           })
         } else {
           this.$message({
-            message: "failure",
-            type: "warning"
+            message: "Finished",
+            type: "success"
           })
         }
       })
-    },
+    }
+    ,
     // 新增文件上传
     setUpload() {
       //确认上传
@@ -456,13 +628,14 @@ export default {
           this.fileIsUpload = true
         })
       }
-    },
+    }
+    ,
 
-    // 新增数据对话框被关闭之前
+    // Close the Result window
     handleClose() {
       this.$messageBox.confirm(
-          'you want to stop?',
-          'stop Message',
+          'Please save. Data will be lost.',
+          'Close Window',
           {
             confirmButtonText: 'yes',
             cancelButtonText: 'no',
@@ -470,6 +643,7 @@ export default {
           }).then(() => {
         stopReturnData(false).then((res) => {
           if (res) {
+            this.imgLIst = []
             this.returnData = []
             this.dialogVisible = false
             this.$message({
@@ -485,19 +659,22 @@ export default {
         })
       })
 
-    },
+    }
+    ,
     changeUpload(file, fileList) {
       this.fileIsUpload = false
       let componentItem = new ComponentItem(id++, 'lc-data', ['file'])
       componentItem.set('file', file)
       this.fileList = fileList;
       this.file = componentItem
-    },
+    }
+    ,
     deleteItem() {
       this.binList = [];
       this.willDelete = false
       this.showBin = false
-    },
+    }
+    ,
     openDiv(res) {
       if (res.type === "BaseParameter") {
         this.currentComponents = this.baseData
@@ -514,7 +691,8 @@ export default {
           }
         }
       }
-    },
+    }
+    ,
     judgeType(obj) {
       // tostring会返回对应不同的标签的构造函数
       const toString = Object.prototype.toString
@@ -534,7 +712,8 @@ export default {
         return 'element'
       }
       return map[toString.call(obj)]
-    },
+    }
+    ,
     deepClone(data) {
       const type = this.judgeType(data)
       let obj
@@ -557,42 +736,63 @@ export default {
         }
       }
       return obj
-    },
+    }
+    ,
     initWebSocket() {
       if (typeof WebSocket === 'undefined')
-        return console.log('您的浏览器不支持websocket')
+        return console.log('Your browser does not support websocket')
       this.websock = new WebSocket(this.wsUrl)
       this.websock.onmessage = this.websocketonmessage
       this.websock.onopen = this.websocketonopen
       this.websock.onerror = this.websocketonerror
       this.websock.onclose = this.websocketclose
-    },
+    }
+    ,
     websocketonopen() {
       console.log('open')
-      // 连接建立之后执行send方法发送数据
-      // let actions = this.submitList
-      // this.websocketsend()
-    },
+    }
+    ,
     websocketonerror() {
-      // 连接建立失败重连
       this.initWebSocket()
-    },
+    }
+    ,
     websocketonmessage(e) {
-      // 数据接收
       const redata = (e.data)
 
       this.returnData.push(redata)
-      console.log('接收的数据', redata)
-    },
+      if (redata.search("Test accuracy") !== -1) {
+        downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\accuracy.jpg").then(res => {
+          let url = window.URL.createObjectURL(res)
+          this.imgLIst.push(url)
+
+          /*    let link = document.createElement('a')
+              link.style.display = 'none'
+              link.download = 'a.jpg'  //  这边的名字需要改
+              link.href = url
+              document.body.appendChild(link)
+              link.click()*/
+
+        })
+
+        downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\loss.jpg").then(res => {
+          let url = window.URL.createObjectURL(res)
+          this.imgLIst.push(url)
+
+        })
+      }
+
+      console.log('Accept data', redata)
+    }
+    ,
     websocketsend(Data) {
       console.log("send", Data)
-      // 数据发送
       this.websock.send(Data)
-    },
+    }
+    ,
     websocketclose(e) {
-      // 关闭
-      console.log('断开连接', e)
-    },
+      console.log('Break connection', e)
+    }
+    ,
   }
 }
 ;
@@ -688,4 +888,6 @@ export default {
   }
 
 }
+
+
 </style>

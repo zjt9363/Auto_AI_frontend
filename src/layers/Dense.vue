@@ -6,7 +6,8 @@
     <el-collapse v-if="!isTemplate">
       <el-collapse-item>
         <template #title>
-          Dense
+          <h3>Dense</h3>
+
         </template>
         <div>
           `Dense` implements the operation:
@@ -30,6 +31,9 @@
                :rules="rules"
                ref="ruleForms"
                @validate="methods.validate"
+               hide-required-asterisk=false
+               label-position="left"
+               label-width="120px"
       >
         <el-collapse-item name="1">
           <template #title>
@@ -39,6 +43,7 @@
                         @keyup.enter.stop
                         @keyup.space.stop
                         @click.stop
+                        style="width: 250px"
               ></el-input>
             </el-form-item>
           </template>
@@ -54,6 +59,7 @@
                          @keyup.enter.stop
                          @keyup.space.stop
                          @click.stop
+                         style="width: 250px"
               >
                 <el-option
                     v-for="(item,index) in activationList"
@@ -110,10 +116,10 @@ export default {
     const ruleForms = ref(null)
     const rules = reactive({
       units: [
-        {required: true, message: 'Please input units', trigger: 'blur'}
+        {required: true, message: 'Please enter units', trigger: 'blur'}
       ],
       activation: [
-        {required: true, message: 'Please input activation', trigger: 'change'}
+        {required: true, message: 'Please enter activation', trigger: 'change'}
       ]
     })
     const methods = {

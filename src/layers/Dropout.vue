@@ -6,7 +6,7 @@
     <el-collapse v-if="!isTemplate">
       <el-collapse-item>
         <template #title>
-          Dropout
+          <h3>Dropout</h3>
         </template>
         <div>
           The Dropout layer randomly sets input units to 0 with a frequency of `rate`
@@ -26,6 +26,9 @@
                :rules="rules"
                ref="ruleForms"
                @validate="methods.validate"
+               hide-required-asterisk=false
+               label-position="left"
+               label-width="120px"
       >
         <el-collapse-item name="1">
           <template #title>
@@ -35,7 +38,8 @@
                   placeholder="Float between 0 and 1"
                   @keyup.enter.stop
                   @keyup.space.stop
-                  @click.stop></el-input>
+                  @click.stop
+                  style="width: 250px"></el-input>
             </el-form-item>
           </template>
           <div>
@@ -71,7 +75,7 @@ export default {
     const ruleForms = ref(null)
     const rules = reactive({
       rate: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'}
+        {required: true, message: 'Please enter correct value', trigger: 'blur'}
       ]
     })
     const methods = {

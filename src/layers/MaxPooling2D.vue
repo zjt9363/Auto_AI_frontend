@@ -3,7 +3,7 @@
     <el-collapse v-if="!isTemplate">
       <el-collapse-item>
         <template #title>
-          MaxPooling2D
+          <h3>MaxPooling2D</h3>
         </template>
         <div>
           The main function is to compress the data scale and shorten the training time.
@@ -21,6 +21,9 @@
                :rules="rules"
                ref="ruleForms"
                @validate="methods.validate"
+               hide-required-asterisk=false
+               label-position="left"
+               label-width="120px"
       >
         <el-collapse-item name="1">
           <template #title>
@@ -30,6 +33,7 @@
                         @keyup.enter.stop
                         @keyup.space.stop
                         @click.stop
+                        style="width: 250px"
               ></el-input>
             </el-form-item>
           </template>
@@ -46,7 +50,8 @@
               <el-select v-model="CData.padding"
                          @keyup.enter.stop
                          @keyup.space.stop
-                         @click.stop>
+                         @click.stop
+                         style="width: 250px">
                 <el-option value="valid">valid</el-option>
                 <el-option value="same">same</el-option>
               </el-select>
@@ -94,10 +99,10 @@ export default {
     const ruleForms = ref(null)
     const rules = reactive({
       poolSize: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'}
+        {required: true, message: 'Please input correct value', trigger: 'blur'}
       ],
       padding: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'}
+        {required: true, message: 'Please input correct value', trigger: 'blur'}
       ]
     })
     const methods = {

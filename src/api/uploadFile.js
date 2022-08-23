@@ -2,7 +2,7 @@ import httpRequest from '@/request/index'
 
 export function uploadFile(data) {
     return httpRequest({
-        url: 'api/upload',
+        url: 'upload',
         method: 'post',
         data,
     })

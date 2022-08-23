@@ -3,7 +3,7 @@
     <el-collapse v-if="!isTemplate">
       <el-collapse-item>
         <template #title>
-          Convolution 2D
+          <h3>Convolution 2D</h3>
         </template>
         <div>
           2D convolution layer (e.g. spatial convolution over images).
@@ -19,13 +19,17 @@
       </el-collapse-item>
     </el-collapse>
     <div @click="methods.handleClick()" :style="{color: (CData.isActive ? 'blue' : 'black')}" v-if="isTemplate">
-<!--      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{"("+CData.id+")"}}</span>
-      -->
+      <!--      <span style="color: red; font-weight: bold" v-if="CData.id !== undefined">{{"("+CData.id+")"}}</span>
+            -->
       Convolution2D
     </div>
     <el-collapse v-if="!isTemplate">
       <el-form style="margin: 10px 0 0 20px" :model="CData" :rules="rules" ref="ruleForms"
-               @validate="methods.validate">
+               @validate="methods.validate"
+               hide-required-asterisk=false
+               label-position="left"
+               label-width="120px"
+      >
         <el-collapse-item name="1">
           <template #title>
             <el-form-item label="filter" prop="filter">
@@ -34,6 +38,7 @@
                         @keyup.enter.stop
                         @keyup.space.stop
                         @click.stop
+                        style="width: 250px"
               ></el-input>
             </el-form-item>
           </template>
@@ -52,7 +57,8 @@
                         placeholder="Two integer separated by a comma"
                         @keyup.enter.stop
                         @keyup.space.stop
-                        @click.stop></el-input>
+                        @click.stop
+                        style="width: 250px"></el-input>
             </el-form-item>
           </template>
           <div>
@@ -67,6 +73,7 @@
                          @keyup.enter.stop
                          @keyup.space.stop
                          @click.stop
+                         style="width: 250px"
               >
                 <el-option v-for="(item,index) in activationList" :value="item.value" :key="index">{{ item.value }}
                 </el-option>
@@ -74,7 +81,8 @@
             </el-form-item>
           </template>
           <div>
-            Using the activation function, the input can be nonlinear transformed, enabling it to learn and perform more complex tasks.
+            Using the activation function, the input can be nonlinear transformed, enabling it to learn and perform more
+            complex tasks.
             <br/>
             Read keras.activations file to get more detail about every kind of activation function.
           </div>
@@ -86,6 +94,7 @@
                          @keyup.enter.stop
                          @keyup.space.stop
                          @click.stop
+                         style="width: 250px"
               >
                 <el-option value="valid">valid</el-option>
                 <el-option value="same">same</el-option>
@@ -141,13 +150,13 @@ export default {
     const ruleForms = ref(null)
     const rules = reactive({
       filter: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'}
+        {required: true, message: 'Please enter correct value', trigger: 'blur'}
       ],
       kernelSize: [
-        {required: true, message: 'Please input Activity name', trigger: 'blur'}
+        {required: true, message: 'Please enter correct value', trigger: 'blur'}
       ],
       activation: [
-        {required: true, message: 'Please input Activity name', trigger: 'change'}
+        {required: true, message: 'Please enter correct value', trigger: 'change'}
       ]
     })
     const methods = {
