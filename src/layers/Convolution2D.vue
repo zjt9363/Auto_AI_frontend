@@ -163,6 +163,7 @@ export default {
       handleClick() {
         if (props.isTemplate) {
           ctx.emit('open', {type: 'Convolution2D', id: CData.id})
+          console.log(props.isParam)
           if (props.isParam) {
             CData.isActive = true
           }

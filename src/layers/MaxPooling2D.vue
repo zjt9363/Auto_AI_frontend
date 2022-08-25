@@ -110,6 +110,8 @@ export default {
         if (props.isTemplate) {
           ctx.emit('open', {type: 'MaxPooling2D', id: CData.id})
           if (props.isParam) {
+            console.log(props.isParam)
+
             CData.isActive = true
           }
         }

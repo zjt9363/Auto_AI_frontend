@@ -68,7 +68,9 @@ export default {
       handleClick() {
         if (props.isTemplate) {
           ctx.emit('open', {type: 'BatchNormalization', id: CData.id})
+          console.log(props.isParam)
           if (props.isParam) {
+            console.log(12)
             CData.isActive = true
           }
         }

@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="24">
           <el-row justify="left" style="margin: 10px;box-sizing:border-box;height: 60px">
-            <el-col :span="8">
+            <el-col :span="7">
               <el-upload
                   ref="uploadRef"
                   class="upload-demo"
@@ -25,8 +25,9 @@
               </el-upload>
             </el-col>
 
-            <el-col :span="7" style="margin-right: 10px">
-              <el-alert title="Please upload your serialized training and test sets.(Use gzip and pkl package)" type="error" center show-icon v-if="!fileIsUpload"
+            <el-col :span="9" style="margin-right: 10px">
+              <el-alert title="Please upload serialized training and test sets.(Use gzip and pkl package)"
+                        type="error" center show-icon v-if="!fileIsUpload"
                         :closable="false"/>
               <el-alert type="success" center show-icon v-else-if="fileIsUpload&&this.fileList.length !== 0"
                         :closable="false">
@@ -177,14 +178,16 @@
           <span>Result from Server:</span>
         </div>
       </template>
-      <div style="height: 500px; overflow: auto">
-        <div v-for="(item,index) in returnData" :key="index">
-          <xmp>
-            {{ item }}
-          </xmp>
-        </div>
-        <div v-if="imgLIst.length !== 0">
-          <img :src="item" v-for="item in imgLIst" :key="item" style="width: 30%">
+      <div style="height: 500px; overflow: auto" ref="autoToBottom">
+        <div ref="content">
+          <div v-for="(item,index) in returnData" :key="index">
+            <xmp>
+              {{ item }}
+            </xmp>
+          </div>
+          <div v-if="imgLIst.length !== 0">
+            <img :src="item" v-for="item in imgLIst" :key="item" style="width: 50%">
+          </div>
         </div>
       </div>
       <template #footer>
@@ -200,6 +203,9 @@
       </template>
     </el-dialog>
   </el-container>
+  <pre>
+      {{getAllList}}
+  </pre>
 </template>
 
 <script>
@@ -208,8 +214,6 @@ import draggable from "vuedraggable";
 import {Delete, UploadFilled} from '@element-plus/icons-vue'
 
 // 导入组件
-import LcData from "@/components/LCData";
-import LcNumber from "@/components/LCNumber";
 import Convolution2D from "@/layers/Convolution2D";
 import MaxPooling2D from "@/layers/MaxPooling2D";
 import Dense from "@/layers/Dense";
@@ -235,8 +239,6 @@ export default {
     Delete,
     UploadFilled,
     draggable,
-    LcData,
-    LcNumber,
     BaseParameter,
     Convolution2D,
     MaxPooling2D,
@@ -347,7 +349,7 @@ export default {
   created() {
     this.baseData = new ComponentItem(0, 'BaseParameter', {
       numClasses: '',
-      toCategorical: '',
+      lossFunction: '',
       optimizer: '',
       isActive: '',
       isValid: false
@@ -375,23 +377,33 @@ export default {
       return true
     },
     addParamterSet(tag) {
+      this.list = []
       const list = JSON.parse(tag.value)
       for (let i = 0; i < list.length; i++) {
         if (list[i].isActive === true && list[i].isActive) {
           this.currentComponents = list[i]
+          this.currentComponents.isActive = true
           this.openDiv(this.currentComponents)
         }
       }
-      this.baseData.numClasses = list[0].numClasses
+      this.baseData.lossFunction= list[0].lossFunction
+      this.baseData.optimizer= list[0].optimizer
+      this.baseData.batchSize= list[0].batchSize
+      this.baseData.earlyStopping= list[0].earlyStopping
+      this.baseData.monitor= list[0].monitor
+      this.baseData.minDelta= list[0].minDelta
+      this.baseData.patience= list[0].patience
+      this.baseData.numClasses= list[0].numClasses
       this.baseData.isActive = list[0].isActive
+      this.baseData.epochs = list[0].epochs
       list.shift()
       this.list = []
       this.list = list
     },
     delParamterSet(title, index) {
       this.$messageBox.confirm(
-          'Are you sure to clear the list?',
-          'clean Message',
+          'Are you sure to delete the parameter set?',
+          'Delete parameter set',
           {
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancel',
@@ -403,6 +415,7 @@ export default {
 
     },
     saveParam() {
+      this.list = []
       this.$messageBox.prompt("set a name for parameters", "save parameters", {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -410,7 +423,8 @@ export default {
         inputErrorMessage: "The length of name should less than 20"
       })
           .then(({value}) => {
-            localStorage.setItem(value, JSON.stringify([this.baseData, ...this.list]))
+            const data = JSON.stringify(([this.baseData, ...this.list]))
+            localStorage.setItem(value, data)
             this.parameterSetList.push({
               title: value,
               value: JSON.stringify([this.baseData, ...this.list]),
@@ -459,7 +473,7 @@ export default {
         let url = window.URL.createObjectURL(res)
         let link = document.createElement('a')
         link.style.display = 'none'
-        link.download = 'a.jpg'  //  这边的名字需要改
+        link.download = 'accuracy.jpg'
         link.href = url
         document.body.appendChild(link)
         link.click()
@@ -468,7 +482,7 @@ export default {
         let url = window.URL.createObjectURL(res)
         let link = document.createElement('a')
         link.style.display = 'none'
-        link.download = 'a.jpg'  //  这边的名字需要改
+        link.download = 'loss.jpg'
         link.href = url
         document.body.appendChild(link)
         link.click()
@@ -479,7 +493,8 @@ export default {
     }
     ,
     tapComponents(e) {
-      const obj = new ComponentItem(id++, e.type, this.deepClone(e.data) || null)
+
+      const obj = new ComponentItem(this.list.length + 1, e.type, this.deepClone(e.data) || null)
       this.list.push(obj)
       this.currentComponents = obj
       obj.isActive = true
@@ -489,9 +504,9 @@ export default {
     clearAttr(oldArr) {
       let arr = oldArr
       for (let i = 0; i < arr.length; i++) {
-        if (this.hasProperty(arr[i], 'isActive')) {
-          Reflect.deleteProperty(arr[i], 'isActive')
-        }
+        // if (this.hasProperty(arr[i], 'isActive')) {
+        //   Reflect.deleteProperty(arr[i], 'isActive')
+        // }
         if (this.hasProperty(arr[i], 'isValid')) {
           Reflect.deleteProperty(arr[i], 'isValid')
         }
@@ -528,7 +543,7 @@ export default {
         this.list = []
         this.baseData.isActive = true
         this.baseData.numClasses = ''
-        this.baseData.toCategorical = 'False'
+        this.baseData.lossFunction = 'sparse_categorical_crossentropy'
         this.baseData.isValid = false
         this.currentComponents = this.baseData
       }).catch(() => {
@@ -585,7 +600,7 @@ export default {
       if (!this.fileIsUpload) {
         this.$notify.warning({
           title: "file err",
-          message: "文件还未上传",
+          message: "File has not been uploaded!",
         })
         return;
       }
@@ -600,7 +615,7 @@ export default {
           })
         } else {
           this.$message({
-            message: "Finished",
+            message: "Success",
             type: "success"
           })
         }
@@ -662,6 +677,11 @@ export default {
     }
     ,
     changeUpload(file, fileList) {
+      console.log(this.$refs.uploadRef);
+
+      if (fileList.length>1) {
+        this.$refs.uploadRef.handleRemove(fileList[0])
+      }
       this.fileIsUpload = false
       let componentItem = new ComponentItem(id++, 'lc-data', ['file'])
       componentItem.set('file', file)
@@ -691,6 +711,7 @@ export default {
           }
         }
       }
+      console.log(this.list)
     }
     ,
     judgeType(obj) {
@@ -712,8 +733,7 @@ export default {
         return 'element'
       }
       return map[toString.call(obj)]
-    }
-    ,
+    },
     deepClone(data) {
       const type = this.judgeType(data)
       let obj
@@ -760,26 +780,43 @@ export default {
       const redata = (e.data)
 
       this.returnData.push(redata)
+
       if (redata.search("Test accuracy") !== -1) {
         downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\accuracy.jpg").then(res => {
           let url = window.URL.createObjectURL(res)
           this.imgLIst.push(url)
-
           /*    let link = document.createElement('a')
               link.style.display = 'none'
               link.download = 'a.jpg'  //  这边的名字需要改
               link.href = url
               document.body.appendChild(link)
               link.click()*/
+        }).then(()=>{
+          downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\loss.jpg").then(res => {
+            let url = window.URL.createObjectURL(res)
+            this.imgLIst.push(url)
+          }).then(()=>{
+            this.$nextTick(() => {
+              console.log(this.$refs.content.scrollHeight)
 
+              this.$refs.autoToBottom.scrollTop = this.$refs.content.scrollHeight;
+            })
+          })
+        }).then(()=>{
+          this.$nextTick(() => {
+            console.log(this.$refs.content.scrollHeight)
+
+            this.$refs.autoToBottom.scrollTop = this.$refs.content.scrollHeight;
+          })
         })
 
-        downloadImg("C:\\Users\\Zarrow\\IdeaProjects\\SelfStudy\\web_AI_springboot\\demo\\loss.jpg").then(res => {
-          let url = window.URL.createObjectURL(res)
-          this.imgLIst.push(url)
 
-        })
       }
+      this.$nextTick(() => {
+        console.log(this.$refs.content.scrollHeight)
+
+        this.$refs.autoToBottom.scrollTop = this.$refs.content.scrollHeight;
+      })
 
       console.log('Accept data', redata)
     }
@@ -870,7 +907,7 @@ export default {
 
 .comp-item {
   cursor: pointer;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .file-wrap > div > div > div {

@@ -1,6 +1,6 @@
 <template>
   <Transition>
-    <div style="width: 100%;">
+    <div style="width: 100%; margin: 5px 0">
       <div @click="methods.handleClick" style="cursor: pointer" :style="{color: (CData.isActive ? 'blue' : 'black')}">
         <el-collapse v-if="!isTemplate">
           <el-collapse-item>
@@ -54,7 +54,71 @@
             </div>
           </el-collapse-item>
 
-          <el-collapse-item name="5">
+          <el-collapse-item name="6">
+            <template #title>
+              <el-form-item label="Early Stopping">
+                <el-select v-model="CData.earlyStopping"
+                           @keyup.enter.stop
+                           @keyup.space.stop
+                           @click.stop
+                           style="width: 220px"
+                >
+                  <el-option value="true">true</el-option>
+                  <el-option value="false">false</el-option>
+                </el-select>
+              </el-form-item>
+            </template>
+            <div>
+              Size of mini-batch.
+              <br/>
+              Please enter an integer or 'None'.
+              <br/>
+              'None' means that don't use mini-batch to train.
+            </div>
+          </el-collapse-item>
+
+          <el-form-item v-if="CData.earlyStopping==='true'"
+                        label="Monitor" style="margin: 10px 0px 10px 80px"
+          >
+            <el-select v-model="CData.monitor"
+                       @keyup.enter.stop
+                       @keyup.space.stop
+                       @click.stop
+                       style="width: 140px"
+            >
+              <el-option value="val_accuracy">val_accuracy</el-option>
+              <el-option value="val_loss">val_loss</el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item v-if="CData.earlyStopping==='true'"
+                        label="Min Delta"
+                        style="margin: 10px 0px 10px 80px"
+          >
+            <el-input v-model="CData.minDelta"
+                      placeholder="input an integer"
+                      @keyup.enter.stop
+                      @keyup.space.stop
+                      @click.stop
+                      style="width: 140px"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item v-if="CData.earlyStopping==='true'"
+                        label="Patience"
+                        style="margin: 10px 0px 10px 80px"
+          >
+            <el-input v-model="CData.patience"
+                      placeholder="input an integer"
+                      @keyup.enter.stop
+                      @keyup.space.stop
+                      @click.stop
+                      style="width: 140px"
+            ></el-input>
+          </el-form-item>
+
+
+          <el-collapse-item name="5" v-if="CData.earlyStopping ==='false'">
             <template #title>
               <el-form-item label="Epochs">
                 <el-input v-model="CData.epochs"
@@ -80,23 +144,25 @@
             <template #title>
               <el-form-item label="Loss Function">
                 <!--      <el-input v-model="CData.toCategorical"></el-input>-->
-                <el-select v-model="CData.toCategorical"
+                <el-select v-model="CData.lossFunction"
                            @keyup.enter.stop
                            @keyup.space.stop
                            @click.stop
                            style="width: 220px"
                 >
-                  <el-option value="categorical_crossentropy">categorical_crossentropy</el-option>
-                  <el-option value="sparse_categorical_crossentropy">sparse_categorical_crossentropy</el-option>
-                  <el-option value="binary_crossentropy">binary_crossentropy</el-option>
-                  <el-option value="mean_squared_error">mean_squared_error</el-option>
-                  <el-option value="mean_absolute_error">mean_absolute_error</el-option>
-                  <el-option value="mean_absolute_percentage_error">mean_absolute_percentage_error</el-option>
-                  <el-option value="mean_squared_logarithmic_error">mean_squared_logarithmic_error</el-option>
-                  <el-option value="squared_hinge">squared_hinge</el-option>
-                  <el-option value="hinge">hinge</el-option>
-                  <el-option value="categorical_hinge">categorical_hinge</el-option>
-                  <el-option value="logcosh">logcosh</el-option>
+                  <el-option :value="item" v-for="item in optimizersOption" :key="item">{{ item }}</el-option>
+                  >
+                  <!--                  <el-option value="categorical_crossentropy">categorical_crossentropy</el-option>
+                                    <el-option value="sparse_categorical_crossentropy">sparse_categorical_crossentropy</el-option>
+                                    <el-option value="binary_crossentropy">binary_crossentropy</el-option>
+                                    <el-option value="mean_squared_error">mean_squared_error</el-option>
+                                    <el-option value="mean_absolute_error">mean_absolute_error</el-option>
+                                    <el-option value="mean_absolute_percentage_error">mean_absolute_percentage_error</el-option>
+                                    <el-option value="mean_squared_logarithmic_error">mean_squared_logarithmic_error</el-option>
+                                    <el-option value="squared_hinge">squared_hinge</el-option>
+                                    <el-option value="hinge">hinge</el-option>
+                                    <el-option value="categorical_hinge">categorical_hinge</el-option>
+                                    <el-option value="logcosh">logcosh</el-option>-->
 
                 </el-select>
               </el-form-item>
@@ -107,7 +173,7 @@
               2.sparse categorical cross-entropy: Using digital tag;
               <br/>
               More details please see the official document:
-              <a href="https://keras.io/zh/losses/#sparse_categorical_crossentropy">losses</a>
+              <a href="https://keras.io/api/losses/" target="_blank">losses</a>
             </div>
           </el-collapse-item>
           <!--          <el-collapse
@@ -115,7 +181,7 @@
                         style="margin: 0 0 0 100px"
                     >-->
           <el-collapse-item name="2"
-                            v-if=" CData.toCategorical === 'categorical_crossentropy'"
+                            v-if=" CData.lossFunction === 'categorical_crossentropy'"
                             style="margin: 0 0 0 100px"
           >
             <template #title>
@@ -153,7 +219,7 @@
               If you don't know how to use it, use the default value.
               <br/>
               More details please see the official document:
-              <a href="https://keras.io/api/optimizers/">optimizers</a>
+              <a href="https://keras.io/api/optimizers/" target="_blank">optimizers</a>
             </div>
           </el-collapse-item>
 
@@ -195,6 +261,9 @@ export default {
     const ruleForms = ref(null);
     const CData = reactive(props.data)
     const currentChild = ref({})
+    const optimizersOption = reactive(
+        ['categorical_crossentropy', 'sparse_categorical_crossentropy', 'binary_crossentropy', 'mean_squared_error', 'mean_absolute_error', 'mean_absolute_percentage_error', 'mean_squared_logarithmic_error', 'squared_hinge', 'hinge', 'categorical_hinge', 'logcosh'])
+
     const options = reactive([
       {
         value: 'Adam',
@@ -389,13 +458,18 @@ export default {
     }
     onMounted(() => {
           CData.isActive = true
-          CData.toCategorical = 'sparse_categorical_crossentropy'
+          CData.lossFunction = 'sparse_categorical_crossentropy'
           CData.batchSize = '128'
+          CData.earlyStopping = 'true'
+          CData.monitor = 'val_accuracy'
+          CData.minDelta = "0.001"
+          CData.patience = "5"
           CData.optimizer = {
             value: options[0].value,
             child: options[0].child
           }
           currentChild.value = options[0].child
+
         }
     )
 
@@ -411,7 +485,8 @@ export default {
       rules,
       ruleForms,
       options,
-      currentChild
+      currentChild,
+      optimizersOption
     }
   }
 }
