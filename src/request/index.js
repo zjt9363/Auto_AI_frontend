@@ -11,6 +11,7 @@ const service = axios.create({
         'X-Requested-With': 'XMLHttpRequest',
     }
 })
+
 service.interceptors.request.use(
     function (config) {
         return config

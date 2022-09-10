@@ -146,6 +146,7 @@ export default {
       {value: "sigmoid"},
       {value: "linear"}
     ])
+    console.log(123)
     const CData = reactive(props.data)
     const ruleForms = ref(null)
     const rules = reactive({

@@ -2,7 +2,7 @@ import httpRequest from '@/request/index'
 
 export function getReturnData(param) {
     return httpRequest({
-        url: 'save',
+        url: 'submit',
         method: 'post',
         data: param,
     })

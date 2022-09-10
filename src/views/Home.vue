@@ -170,7 +170,7 @@
     <el-dialog
         v-model="dialogVisible"
         title="Tips"
-        width="55%"
+        width="60%"
         :before-close="handleClose"
     >
       <template #header>
@@ -203,9 +203,7 @@
       </template>
     </el-dialog>
   </el-container>
-  <pre>
-      {{getAllList}}
-  </pre>
+
 </template>
 
 <script>
@@ -377,28 +375,29 @@ export default {
       return true
     },
     addParamterSet(tag) {
-      this.list = []
-      const list = JSON.parse(tag.value)
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].isActive === true && list[i].isActive) {
-          this.currentComponents = list[i]
-          this.currentComponents.isActive = true
-          this.openDiv(this.currentComponents)
+      this.clear()
+      setTimeout(()=>{
+        this.list = []
+        const list = JSON.parse(tag.value)
+        for (let i = 0; i < list.length; i++) {
+          list[i].isActive = false
         }
-      }
-      this.baseData.lossFunction= list[0].lossFunction
-      this.baseData.optimizer= list[0].optimizer
-      this.baseData.batchSize= list[0].batchSize
-      this.baseData.earlyStopping= list[0].earlyStopping
-      this.baseData.monitor= list[0].monitor
-      this.baseData.minDelta= list[0].minDelta
-      this.baseData.patience= list[0].patience
-      this.baseData.numClasses= list[0].numClasses
-      this.baseData.isActive = list[0].isActive
-      this.baseData.epochs = list[0].epochs
-      list.shift()
-      this.list = []
-      this.list = list
+        this.baseData.lossFunction= list[0].lossFunction
+        this.baseData.optimizer= list[0].optimizer
+        this.baseData.batchSize= list[0].batchSize
+        this.baseData.earlyStopping= list[0].earlyStopping
+        this.baseData.monitor= list[0].monitor
+        this.baseData.minDelta= list[0].minDelta
+        this.baseData.patience= list[0].patience
+        this.baseData.numClasses= list[0].numClasses
+        this.baseData.isActive = list[0].isActive
+        this.baseData.epochs = list[0].epochs
+        this.currentComponents = this.baseData
+        this.currentComponents.isActive = true
+        list.shift()
+        this.list = []
+        this.list = list
+      })
     },
     delParamterSet(title, index) {
       this.$messageBox.confirm(
@@ -415,7 +414,6 @@ export default {
 
     },
     saveParam() {
-      this.list = []
       this.$messageBox.prompt("set a name for parameters", "save parameters", {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -539,13 +537,7 @@ export default {
           type: 'success',
           message: 'clean completed',
         })
-        id = 1
-        this.list = []
-        this.baseData.isActive = true
-        this.baseData.numClasses = ''
-        this.baseData.lossFunction = 'sparse_categorical_crossentropy'
-        this.baseData.isValid = false
-        this.currentComponents = this.baseData
+        this.clear()
       }).catch(() => {
         this.$message({
           type: 'warning',
@@ -553,8 +545,16 @@ export default {
         })
       })
 
-    }
-    ,
+    },
+    clear() {
+      id = 1
+      this.list = []
+      this.baseData.isActive = true
+      this.baseData.numClasses = ''
+      this.baseData.lossFunction = 'sparse_categorical_crossentropy'
+      this.baseData.isValid = false
+      this.currentComponents = this.baseData
+    },
     validSubmit(forList) {
       for (let i = 0; i < forList.length; i++) {
         if (forList[i].isValid === false) {
@@ -663,7 +663,7 @@ export default {
             this.dialogVisible = false
             this.$message({
               type: 'success',
-              message: 'already stopped',
+              message: 'Finish',
             })
           }
         })
