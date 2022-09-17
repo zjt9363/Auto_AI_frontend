@@ -25,7 +25,7 @@
               </el-upload>
             </el-col>
 
-            <el-col :span="9" style="margin-right: 10px">
+            <el-col :span="11" style="margin-right: 10px">
               <el-alert title="Please upload serialized training and test sets.(Use gzip and pkl package)"
                         type="error" center show-icon v-if="!fileIsUpload"
                         :closable="false"/>
@@ -135,6 +135,7 @@
                 <span>Layer Parameter:</span>
               </div>
             </template>
+            <keep-alive>
             <component
                 :is="currentComponents.type"
                 :data="currentComponents"
@@ -142,6 +143,7 @@
                 :isTemplate="false"
                 ref="childRules"
             />
+            </keep-alive>
           </el-card>
         </el-col>
       </el-row>
@@ -167,6 +169,12 @@
         </template>
       </draggable>
     </div>
+<!--    <div>
+      <xmp>{{baseData}}</xmp>
+      <xmp>{{list}}</xmp>
+
+    </div>-->
+
     <el-dialog
         v-model="dialogVisible"
         title="Tips"
@@ -382,18 +390,20 @@ export default {
         for (let i = 0; i < list.length; i++) {
           list[i].isActive = false
         }
-        this.baseData.lossFunction= list[0].lossFunction
-        this.baseData.optimizer= list[0].optimizer
-        this.baseData.batchSize= list[0].batchSize
-        this.baseData.earlyStopping= list[0].earlyStopping
-        this.baseData.monitor= list[0].monitor
-        this.baseData.minDelta= list[0].minDelta
-        this.baseData.patience= list[0].patience
-        this.baseData.numClasses= list[0].numClasses
-        this.baseData.isActive = list[0].isActive
-        this.baseData.epochs = list[0].epochs
-        this.currentComponents = this.baseData
-        this.currentComponents.isActive = true
+        {
+          this.baseData.lossFunction = list[0].lossFunction
+          this.baseData.optimizer = list[0].optimizer
+          this.baseData.batchSize = list[0].batchSize
+          this.baseData.earlyStopping = list[0].earlyStopping
+          this.baseData.monitor = list[0].monitor
+          this.baseData.minDelta = list[0].minDelta
+          this.baseData.patience = list[0].patience
+          this.baseData.numClasses = list[0].numClasses
+          this.baseData.isActive = list[0].isActive
+          this.baseData.epochs = list[0].epochs
+          this.currentComponents = this.baseData
+          this.currentComponents.isActive = true
+        }
         list.shift()
         this.list = []
         this.list = list
